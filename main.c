@@ -284,8 +284,8 @@ int main()
     int face_count = 0;
     int face_capacity = 0;
 
-    read_mtl_file("Astronaut head.mtl");
-    read_obj_file("Astronaut head.obj", &vertices, &vertex_count, &vertex_capacity, &texCoords, &texCoord_count, &texCoord_capacity, &normals, &normal_count, &normal_capacity, &faces, &face_count, &face_capacity);
+    read_mtl_file("Monster1.mtl");
+    read_obj_file("Monster1.obj", &vertices, &vertex_count, &vertex_capacity, &texCoords, &texCoord_count, &texCoord_capacity, &normals, &normal_count, &normal_capacity, &faces, &face_count, &face_capacity);
 
     // printf("Materials:\n");
     // for (int i = 0; i < material_count; i++)
@@ -395,13 +395,13 @@ int main()
 
     printf("\nPassing data to GPU...\n");
 
-    GLfloat verticesToGPU[face_count * 6];
+    GLfloat verticesToGPU[face_count * 9];
 
     for (int i = 0; i < vertex_count; i++)
     {
-        verticesToGPU[i * 6] = vertices[i].x;
-        verticesToGPU[i * 6 + 1] = vertices[i].y;
-        verticesToGPU[i * 6 + 2] = vertices[i].z;
+        verticesToGPU[i * 9] = vertices[i].x;
+        verticesToGPU[i * 9 + 1] = vertices[i].y;
+        verticesToGPU[i * 9 + 2] = vertices[i].z;
 
         Face *face = NULL;
 
@@ -424,15 +424,15 @@ int main()
             {
                 if (strcmp(materials[j].name, face->materialName) == 0)
                 {
-                    verticesToGPU[i * 6 + 3] = materials[j].Kd[0];
-                    verticesToGPU[i * 6 + 4] = materials[j].Kd[1];
-                    verticesToGPU[i * 6 + 5] = materials[j].Kd[2];
+                    verticesToGPU[i * 9 + 3] = materials[j].Kd[0];
+                    verticesToGPU[i * 9 + 4] = materials[j].Kd[1];
+                    verticesToGPU[i * 9 + 5] = materials[j].Kd[2];
                 }
             }
 
-            verticesToGPU[i * 6 + 6] = normals[face->normalIndex[0] - 1].x;
-            verticesToGPU[i * 6 + 7] = normals[face->normalIndex[0] - 1].y;
-            verticesToGPU[i * 6 + 8] = normals[face->normalIndex[0] - 1].z;
+            verticesToGPU[i * 9 + 6] = normals[face->normalIndex[0] - 1].x;
+            verticesToGPU[i * 9 + 7] = normals[face->normalIndex[1] - 1].y;
+            verticesToGPU[i * 9 + 8] = normals[face->normalIndex[2] - 1].z;
         }
     }
 
@@ -459,13 +459,13 @@ int main()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_DYNAMIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid *)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid *)0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid *)(3 * sizeof(GLfloat)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid *)(3 * sizeof(GLfloat)));
     glEnableVertexAttribArray(1);
 
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid *)(6 * sizeof(GLfloat)));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid *)(6 * sizeof(GLfloat)));
     glEnableVertexAttribArray(2);
 
     glBindVertexArray(0);

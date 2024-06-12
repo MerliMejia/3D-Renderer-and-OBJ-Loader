@@ -25,9 +25,11 @@ mat4 rotationMatrix(vec3 axis, float angle) {
 }
 
 void main() {
-    vec4 calculatedPosition = model * rotationMatrix(vec3(0.0, 1.0, 0.0), time) * vec4(position, 5);
+    mat4 rotation = rotationMatrix(vec3(0.0, 1.0, 0.0), time);
+    vec4 worldPosition = model * rotation * vec4(position, 5.0);
+    gl_Position = worldPosition;
+
     color = vertexColor;
-    Normal = normal;
-    FragPos = position;
-    gl_Position = calculatedPosition;
+    Normal = mat3(transpose(inverse(model * rotation))) * normal; // Transforming normal
+    FragPos = vec3(worldPosition); // World space position
 }
