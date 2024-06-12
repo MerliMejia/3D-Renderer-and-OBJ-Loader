@@ -284,8 +284,8 @@ int main()
     int face_count = 0;
     int face_capacity = 0;
 
-    read_mtl_file("Monster1.mtl");
-    read_obj_file("Monster1.obj", &vertices, &vertex_count, &vertex_capacity, &texCoords, &texCoord_count, &texCoord_capacity, &normals, &normal_count, &normal_capacity, &faces, &face_count, &face_capacity);
+    read_mtl_file("Astronaut head.mtl");
+    read_obj_file("Astronaut head.obj", &vertices, &vertex_count, &vertex_capacity, &texCoords, &texCoord_count, &texCoord_capacity, &normals, &normal_count, &normal_capacity, &faces, &face_count, &face_capacity);
 
     // printf("Materials:\n");
     // for (int i = 0; i < material_count; i++)
@@ -429,6 +429,10 @@ int main()
                     verticesToGPU[i * 6 + 5] = materials[j].Kd[2];
                 }
             }
+
+            verticesToGPU[i * 6 + 6] = normals[face->normalIndex[0] - 1].x;
+            verticesToGPU[i * 6 + 7] = normals[face->normalIndex[0] - 1].y;
+            verticesToGPU[i * 6 + 8] = normals[face->normalIndex[0] - 1].z;
         }
     }
 
@@ -460,6 +464,9 @@ int main()
 
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid *)(3 * sizeof(GLfloat)));
     glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid *)(6 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(2);
 
     glBindVertexArray(0);
 

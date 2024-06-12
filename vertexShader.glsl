@@ -2,10 +2,15 @@
 
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 vertexColor;
+layout(location = 2) in vec3 normal;
 
 out vec3 color;
+out vec3 Normal;
+out vec3 FragPos;
 
 uniform float time;
+
+mat4 model = mat4(1.0);
 
 mat4 rotationMatrix(vec3 axis, float angle) {
     axis = normalize(axis);
@@ -20,6 +25,9 @@ mat4 rotationMatrix(vec3 axis, float angle) {
 }
 
 void main() {
+    vec4 calculatedPosition = model * rotationMatrix(vec3(0.0, 1.0, 0.0), time) * vec4(position, 5);
     color = vertexColor;
-    gl_Position = rotationMatrix(vec3(0.0, 1.0, 0.0), time) * vec4(position, 5);
+    Normal = normal;
+    FragPos = position;
+    gl_Position = calculatedPosition;
 }
