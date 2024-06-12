@@ -42,32 +42,32 @@ typedef struct
     char map_Kd[50]; // Diffuse texture map
 } Material;
 
-#define MAX_VERTICES 100000
+// #define MAX_VERTICES 100000
 
-Vertex vertices[MAX_VERTICES];
-int vertex_count = 0;
+// Vertex vertices[MAX_VERTICES];
+// int vertex_count = 0;
 
-#define MAX_TEXCOORDS 100000
+// #define MAX_TEXCOORDS 100000
 
-TexCoord texCoords[MAX_TEXCOORDS];
-int texCoord_count = 0;
+// TexCoord texCoords[MAX_TEXCOORDS];
+// int texCoord_count = 0;
 
-#define MAX_NORMALS 100000
+// #define MAX_NORMALS 100000
 
-Normal normals[MAX_NORMALS];
-int normal_count = 0;
+// Normal normals[MAX_NORMALS];
+// int normal_count = 0;
 
-#define MAX_FACES 1000000
+// #define MAX_FACES 1000000
 
-Face faces[MAX_FACES];
-int face_count = 0;
+// Face faces[MAX_FACES];
+// int face_count = 0;
 
 #define MAX_MATERIALS 100
 
 Material materials[MAX_MATERIALS];
 int material_count = 0;
 
-void read_obj_file(const char *filename)
+void read_obj_file(const char *filename, Vertex **vertices, int *vertex_count, int *vertex_capacity, TexCoord **texCoords, int *textCoord_count, int *texCoord_capacity, Normal **normals, int *normal_count, int *normal_capacity, Face **faces, int *face_count, int *face_capacity)
 {
     FILE *file = fopen(filename, "r");
     if (!file)
@@ -79,25 +79,91 @@ void read_obj_file(const char *filename)
     char line[128];
     char current_material[50] = "";
 
+    // Initialize vertex count and capacity
+    *vertex_count = 0;
+    *vertex_capacity = 10; // Initial capacity, can be adjusted as needed
+    *vertices = malloc(*vertex_capacity * sizeof(Vertex));
+
+    // Initialize texture coordinate count and capacity
+    *textCoord_count = 0;
+    *texCoord_capacity = 10; // Initial capacity, can be adjusted as needed
+    *texCoords = malloc(*texCoord_capacity * sizeof(TexCoord));
+
+    // Initialize normal count and capacity
+    *normal_count = 0;
+    *normal_capacity = 10; // Initial capacity, can be adjusted as needed
+    *normals = malloc(*normal_capacity * sizeof(Normal));
+
+    // Initialize face count and capacity
+    *face_count = 0;
+    *face_capacity = 10; // Initial capacity, can be adjusted as needed
+    *faces = malloc(*face_capacity * sizeof(Face));
+
+    if (!*vertices)
+    {
+        perror("Failed to allocate memory");
+        fclose(file);
+        exit(EXIT_FAILURE);
+    }
+
     while (fgets(line, sizeof(line), file))
     {
         if (strncmp(line, "v ", 2) == 0)
         {
             Vertex vertex;
             sscanf(line, "v %f %f %f", &vertex.x, &vertex.y, &vertex.z);
-            vertices[vertex_count++] = vertex;
+
+            if (*vertex_count >= *vertex_capacity)
+            {
+                *vertex_capacity *= 2; // Double the capacity
+                *vertices = realloc(*vertices, *vertex_capacity * sizeof(Vertex));
+                if (!*vertices)
+                {
+                    perror("Failed to reallocate memory");
+                    fclose(file);
+                    exit(EXIT_FAILURE);
+                }
+            }
+
+            (*vertices)[(*vertex_count)++] = vertex;
         }
         else if (strncmp(line, "vt ", 3) == 0)
         {
             TexCoord texCoord;
             sscanf(line, "vt %f %f", &texCoord.u, &texCoord.v);
-            texCoords[texCoord_count++] = texCoord;
+
+            if (*textCoord_count >= *texCoord_capacity)
+            {
+                *texCoord_capacity *= 2; // Double the capacity
+                *texCoords = realloc(*texCoords, *texCoord_capacity * sizeof(TexCoord));
+                if (!*texCoords)
+                {
+                    perror("Failed to reallocate memory");
+                    fclose(file);
+                    exit(EXIT_FAILURE);
+                }
+            }
+
+            (*texCoords)[(*textCoord_count)++] = texCoord;
         }
         else if (strncmp(line, "vn ", 3) == 0)
         {
             Normal normal;
             sscanf(line, "vn %f %f %f", &normal.x, &normal.y, &normal.z);
-            normals[normal_count++] = normal;
+
+            if (*normal_count >= *normal_capacity)
+            {
+                *normal_capacity *= 2; // Double the capacity
+                *normals = realloc(*normals, *normal_capacity * sizeof(Normal));
+                if (!*normals)
+                {
+                    perror("Failed to reallocate memory");
+                    fclose(file);
+                    exit(EXIT_FAILURE);
+                }
+            }
+
+            (*normals)[(*normal_count)++] = normal;
         }
         else if (strncmp(line, "usemtl ", 7) == 0)
         {
@@ -114,7 +180,20 @@ void read_obj_file(const char *filename)
             if (matches == 9)
             {
                 strcpy(face.materialName, current_material);
-                faces[face_count++] = face;
+
+                if (*face_count >= *face_capacity)
+                {
+                    *face_capacity *= 2; // Double the capacity
+                    *faces = realloc(*faces, *face_capacity * sizeof(Face));
+                    if (!*faces)
+                    {
+                        perror("Failed to reallocate memory");
+                        fclose(file);
+                        exit(EXIT_FAILURE);
+                    }
+                }
+
+                (*faces)[(*face_count)++] = face;
             }
             else
             {
@@ -187,8 +266,26 @@ void read_mtl_file(const char *filename)
 
 int main()
 {
+    printf("\nReading OBJ file...\n\n");
+
+    Vertex *vertices = NULL;
+    int vertex_count = 0;
+    int vertex_capacity = 0;
+
+    TexCoord *texCoords = NULL;
+    int texCoord_count = 0;
+    int texCoord_capacity = 0;
+
+    Normal *normals = NULL;
+    int normal_count = 0;
+    int normal_capacity = 0;
+
+    Face *faces = NULL;
+    int face_count = 0;
+    int face_capacity = 0;
+
     read_mtl_file("Monster1.mtl");
-    read_obj_file("Monster1.obj");
+    read_obj_file("Monster1.obj", &vertices, &vertex_count, &vertex_capacity, &texCoords, &texCoord_count, &texCoord_capacity, &normals, &normal_count, &normal_capacity, &faces, &face_count, &face_capacity);
 
     // printf("Materials:\n");
     // for (int i = 0; i < material_count; i++)
@@ -289,6 +386,15 @@ int main()
     printf("Max Fragment Uniforms: %d\n", maxFragmentUniforms);
     printf("Max Geometry Uniforms: %d\n", maxGeometryUniforms);
 
+    // Print how many vertices, texCoords, normals, and faces were read
+    printf("\nObj Amounts of memory allocated:\n\n");
+    printf("Vertices: %d\n", vertex_capacity);
+    printf("TexCoords: %d\n", texCoord_capacity);
+    printf("Normals: %d\n", normal_capacity);
+    printf("Faces: %d\n", face_capacity);
+
+    printf("\nPassing data to GPU...\n");
+
     GLfloat verticesToGPU[face_count * 6];
 
     for (int i = 0; i < vertex_count; i++)
@@ -366,6 +472,15 @@ int main()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
+    printf("\nFreeing memory...\n");
+
+    free(vertices);
+    free(texCoords);
+    free(normals);
+    free(faces);
+
+    printf("\nRendering...\n");
+
     // Render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -389,6 +504,21 @@ int main()
         glfwPollEvents();
     }
 
+    printf("\nExiting...\n");
+
+    // Clean up
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
+
+    glDeleteProgram(shaderProgram);
+
+    for (int i = 0; i < 2; i++)
+    {
+        glDeleteShader(shaders[i]);
+    }
+
+    // Terminate GLFW
     glfwTerminate();
 
     return 0;
