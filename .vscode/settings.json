@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "*.embeddedhtml": "html",
+        "glew.h": "c",
+        "utils.h": "c",
+        "stdio.h": "c",
+        "multicolortrianglefromshaders.h": "c",
+        "shaders.h": "c",
+        "multicoloranimatedcubefromshaders.h": "c",
+        "ios": "c",
+        "stdlib.h": "c"
+    }
+}
