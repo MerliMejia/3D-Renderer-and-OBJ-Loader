@@ -284,8 +284,8 @@ int main()
     int face_count = 0;
     int face_capacity = 0;
 
-    read_mtl_file("sword.mtl");
-    read_obj_file("sword.obj", &vertices, &vertex_count, &vertex_capacity, &texCoords, &texCoord_count, &texCoord_capacity, &normals, &normal_count, &normal_capacity, &faces, &face_count, &face_capacity);
+    read_mtl_file("esposito.mtl");
+    read_obj_file("esposito.obj", &vertices, &vertex_count, &vertex_capacity, &texCoords, &texCoord_count, &texCoord_capacity, &normals, &normal_count, &normal_capacity, &faces, &face_count, &face_capacity);
 
     // printf("Materials:\n");
     // for (int i = 0; i < material_count; i++)
