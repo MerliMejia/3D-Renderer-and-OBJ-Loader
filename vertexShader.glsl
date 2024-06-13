@@ -26,7 +26,7 @@ mat4 rotationMatrix(vec3 axis, float angle) {
 
 void main() {
     mat4 rotation = rotationMatrix(vec3(0.0, 1.0, 0.0), time);
-    vec4 worldPosition = model * rotation * vec4(position, 5.0);
+    vec4 worldPosition = model * rotation * vec4(position, 10.0);
     gl_Position = worldPosition;
 
     color = vertexColor;
