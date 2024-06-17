@@ -8,12 +8,22 @@ in vec3 FragPos;
 
 uniform vec3 lightColor = vec3(1.0, 1.0, 1.0);
 uniform vec3 lightPos = vec3(1.2, 1.0, -2.0);
+
 uniform float hueAdjust = 0.05;
 uniform float saturationAdjust = 1.8;
 uniform float brightnessAdjust = 0.2;
 
+uniform float hHueAdjust = 0.05;
+uniform float hSaturationAdjust = 1.8;
+uniform float hBrightnessAdjust = 0.2;
+
 // For some objects, 2.2 is a better gamma value
-float gamma = 2.2;
+uniform float gamma = 2.2;
+
+uniform float ambientStrength = 0.1;
+
+uniform float specularStrength = 0.8;
+uniform float specularExponent = 32.0;
 
 vec3 rgb2hsb(vec3 c) {
     vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -31,7 +41,6 @@ vec3 hsb2rgb(vec3 c) {
 }
 
 void main() {
-    float ambientStrength = 0.1;
     vec3 ambient = ambientStrength * lightColor;
 
     vec3 norm = normalize(Normal);
@@ -39,8 +48,6 @@ void main() {
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = diff * lightColor;
 
-    float specularStrength = 0.8;
-    float specularExponent = 32.0;
     vec3 viewDir = normalize(-FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), specularExponent);
@@ -60,9 +67,9 @@ void main() {
     shadowColor = hsb2rgb(shadowColor);
 
     vec3 highligthColor = rgb2hsb(kd_corrected);
-    highligthColor.r += hueAdjust;
-    highligthColor.g *= saturationAdjust;
-    highligthColor.b += brightnessAdjust;
+    highligthColor.r += hHueAdjust;
+    highligthColor.g *= hSaturationAdjust;
+    highligthColor.b += hBrightnessAdjust;
 
     highligthColor = hsb2rgb(highligthColor);
 

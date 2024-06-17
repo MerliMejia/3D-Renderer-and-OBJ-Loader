@@ -284,8 +284,8 @@ int main()
     int face_count = 0;
     int face_capacity = 0;
 
-    read_mtl_file("esposito.mtl");
-    read_obj_file("esposito.obj", &vertices, &vertex_count, &vertex_capacity, &texCoords, &texCoord_count, &texCoord_capacity, &normals, &normal_count, &normal_capacity, &faces, &face_count, &face_capacity);
+    read_mtl_file("sword.mtl");
+    read_obj_file("sword.obj", &vertices, &vertex_count, &vertex_capacity, &texCoords, &texCoord_count, &texCoord_capacity, &normals, &normal_count, &normal_capacity, &faces, &face_count, &face_capacity);
 
     // printf("Materials:\n");
     // for (int i = 0; i < material_count; i++)
@@ -488,6 +488,21 @@ int main()
 
     printf("\nRendering...\n");
 
+    // This works for esposito.obj
+
+    float hueAdjust = 0.05; //1
+    float saturationAdjust = 3.459998; //2
+    float brightnessAdjust = 0.2; //3
+    float hHueAdjust = 0.05; //4
+    float hSaturationAdjust = 0.880001;//5
+    float hBrightnessAdjust = 0.2;//6
+    float gamma = 2.2;//7
+    float ambientStrength = -0.109999;//8
+    float specularStrength = 0.8;//9
+    float specularExponent = 32.0;//0
+
+    int currentEdit = 1;
+
     // Render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -500,6 +515,218 @@ int main()
 
         glUseProgram(shaderProgram);
 
+        // if we're pressing 1
+        if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+        {
+            currentEdit = 1;
+        }
+        // if we're pressing 2
+        if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+        {
+            currentEdit = 2;
+        }
+        // if we're pressing 3
+        if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+        {
+            currentEdit = 3;
+        }
+        // if we're pressing 4
+        if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
+        {
+            currentEdit = 4;
+        }
+        // if we're pressing 5
+        if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
+        {
+            currentEdit = 5;
+        }
+        // if we're pressing 6
+        if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
+        {
+            currentEdit = 6;
+        }
+        // if we're pressing 7
+        if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS)
+        {
+            currentEdit = 7;
+        }
+        // if we're pressing 8
+        if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS)
+        {
+            currentEdit = 8;
+        }
+        // if we're pressing 9
+        if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS)
+        {
+            currentEdit = 9;
+        }
+        // if we're pressing 0
+        if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS)
+        {
+            currentEdit = 0;
+        }
+
+        // if is 1 and were pressing right
+        if (currentEdit == 1 && glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        {
+            hueAdjust += 0.01;
+            printf("hueAdjust: %f\n", hueAdjust);
+        }
+        // if is 1 and were pressing left
+        if (currentEdit == 1 && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        {
+            hueAdjust -= 0.01;
+            printf("hueAdjust: %f\n", hueAdjust);
+        }
+        // if is 2 and were pressing right
+        if (currentEdit == 2 && glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        {
+            saturationAdjust += 0.01;
+            printf("saturationAdjust: %f\n", saturationAdjust);
+        }
+        // if is 2 and were pressing left
+        if (currentEdit == 2 && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        {
+            saturationAdjust -= 0.01;
+            printf("saturationAdjust: %f\n", saturationAdjust);
+        }
+        // if is 3 and were pressing right
+        if (currentEdit == 3 && glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        {
+            brightnessAdjust += 0.01;
+            printf("brightnessAdjust: %f\n", brightnessAdjust);
+        }
+        // if is 3 and were pressing left
+        if (currentEdit == 3 && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        {
+            brightnessAdjust -= 0.01;
+            printf("brightnessAdjust: %f\n", brightnessAdjust);
+        }
+        // if is 4 and were pressing right
+        if (currentEdit == 4 && glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        {
+            hHueAdjust += 0.01;
+            printf("hHueAdjust: %f\n", hHueAdjust);
+        }
+        // if is 4 and were pressing left
+        if (currentEdit == 4 && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        {
+            hHueAdjust -= 0.01;
+            printf("hHueAdjust: %f\n", hHueAdjust);
+        }
+        // if is 5 and were pressing right
+        if (currentEdit == 5 && glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        {
+            hSaturationAdjust += 0.01;
+            printf("hSaturationAdjust: %f\n", hSaturationAdjust);
+        }
+        // if is 5 and were pressing left
+        if (currentEdit == 5 && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        {
+            hSaturationAdjust -= 0.01;
+            printf("hSaturationAdjust: %f\n", hSaturationAdjust);
+        }
+        // if is 6 and were pressing right
+        if (currentEdit == 6 && glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        {
+            hBrightnessAdjust += 0.01;
+            printf("hBrightnessAdjust: %f\n", hBrightnessAdjust);
+        }
+        // if is 6 and were pressing left
+        if (currentEdit == 6 && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        {
+            hBrightnessAdjust -= 0.01;
+            printf("hBrightnessAdjust: %f\n", hBrightnessAdjust);
+        }
+        // if is 7 and were pressing right
+        if (currentEdit == 7 && glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        {
+            gamma += 0.01;
+            printf("gamma: %f\n", gamma);
+        }
+        // if is 7 and were pressing left
+        if (currentEdit == 7 && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        {
+            gamma -= 0.01;
+            printf("gamma: %f\n", gamma);
+        }
+        // if is 8 and were pressing right
+        if (currentEdit == 8 && glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        {
+            ambientStrength += 0.01;
+            printf("ambientStrength: %f\n", ambientStrength);
+        }
+        // if is 8 and were pressing left
+        if (currentEdit == 8 && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        {
+            ambientStrength -= 0.01;
+            printf("ambientStrength: %f\n", ambientStrength);
+        }
+        // if is 9 and were pressing right
+        if (currentEdit == 9 && glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        {
+            specularStrength += 0.01;
+            printf("specularStrength: %f\n", specularStrength);
+        }
+        // if is 9 and were pressing left
+        if (currentEdit == 9 && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        {
+            specularStrength -= 0.01;
+            printf("specularStrength: %f\n", specularStrength);
+        }
+        // if is 0 and were pressing right
+        if (currentEdit == 0 && glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        {
+            specularExponent += 0.01;
+            printf("specularExponent: %f\n", specularExponent);
+        }
+        // if is 0 and were pressing left
+        if (currentEdit == 0 && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        {
+            specularExponent -= 0.01;
+            printf("specularExponent: %f\n", specularExponent);
+        }
+
+        // Uniform for hueAdjust
+        GLint hueAdjustLocation = glGetUniformLocation(shaderProgram, "hueAdjust");
+        glUniform1f(hueAdjustLocation, hueAdjust);
+
+        // Uniform for saturationAdjust
+        GLint saturationAdjustLocation = glGetUniformLocation(shaderProgram, "saturationAdjust");
+        glUniform1f(saturationAdjustLocation, saturationAdjust);
+
+        // Uniform for brightnessAdjust
+        GLint brightnessAdjustLocation = glGetUniformLocation(shaderProgram, "brightnessAdjust");
+        glUniform1f(brightnessAdjustLocation, brightnessAdjust);
+
+        // Uniform for hHueAdjust
+        GLint hHueAdjustLocation = glGetUniformLocation(shaderProgram, "hHueAdjust");
+        glUniform1f(hHueAdjustLocation, hHueAdjust);
+
+        // Uniform for hSaturationAdjust
+        GLint hSaturationAdjustLocation = glGetUniformLocation(shaderProgram, "hSaturationAdjust");
+        glUniform1f(hSaturationAdjustLocation, hSaturationAdjust);
+
+        // Uniform for hBrightnessAdjust
+        GLint hBrightnessAdjustLocation = glGetUniformLocation(shaderProgram, "hBrightnessAdjust");
+        glUniform1f(hBrightnessAdjustLocation, hBrightnessAdjust);
+
+        // Uniform for gamma
+        GLint gammaLocation = glGetUniformLocation(shaderProgram, "gamma");
+        glUniform1f(gammaLocation, gamma);
+
+        // Uniform for ambientStrength
+        GLint ambientStrengthLocation = glGetUniformLocation(shaderProgram, "ambientStrength");
+        glUniform1f(ambientStrengthLocation, ambientStrength);
+
+        // Uniform for specularStrength
+        GLint specularStrengthLocation = glGetUniformLocation(shaderProgram, "specularStrength");
+        glUniform1f(specularStrengthLocation, specularStrength);
+
+        // Uniform for specularExponent
+        GLint specularExponentLocation = glGetUniformLocation(shaderProgram, "specularExponent");
+        glUniform1f(specularExponentLocation, specularExponent);
+        
         // Uniform for time
         GLint timeLocation = glGetUniformLocation(shaderProgram, "time");
         glUniform1f(timeLocation, (GLfloat)glfwGetTime());
